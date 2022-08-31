@@ -30,6 +30,7 @@ const account4 = {
 };
 
 const accounts = [account1, account2, account3, account4];
+const movements = account1.movements;
 
 // Elements
 const labelWelcome = document.querySelector('.welcome');
@@ -85,3 +86,11 @@ const createUsernames = function (accs) {
 };
 createUsernames(accounts);
 console.log(accounts);
+const deposits = movements.filter(function (mov) {
+  return mov > 0;
+});
+
+const withdrawals = movements.filter(mov => mov < 0);
+console.log(movements);
+console.log(deposits);
+console.log(withdrawals);
