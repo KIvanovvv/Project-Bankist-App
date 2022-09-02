@@ -31,6 +31,7 @@ const account4 = {
 
 const accounts = [account1, account2, account3, account4];
 const movements = account1.movements;
+const euroToUsd = 1.1;
 
 // Elements
 const labelWelcome = document.querySelector('.welcome');
@@ -86,19 +87,34 @@ const createUsernames = function (accs) {
 };
 const calcDisplayBalance = function (movements) {
   const balance = movements.reduce((acc, mov) => acc + mov, 0);
-  labelBalance.textContent = `${balance} EUR`;
+  labelBalance.textContent = `${balance} €`;
 };
+const calcDisplaySummary = function (movements) {
+  const incomes = movements
+    .filter(mov => mov > 0)
+    .reduce((acc, mov) => acc + mov, 0);
+  labelSumIn.textContent = `${incomes}€`;
+  const outcomes = movements
+    .filter(mov => mov <= 0)
+    .reduce((acc, mov) => acc + mov, 0);
+  labelSumOut.textContent = `${Math.abs(outcomes)}€`;
+
+  const interest = movements
+    .filter(mov => mov > 0)
+    .map(deposit => (deposit * 1.2) / 100)
+    .filter(interest => interest >= 1 && interest)
+    .reduce((acc, sum) => acc + sum, 0);
+  labelSumInterest.textContent = `${interest}€`;
+};
+calcDisplaySummary(account1.movements);
 calcDisplayBalance(account1.movements);
 createUsernames(accounts);
-console.log(accounts);
+
 const deposits = movements.filter(function (mov) {
   return mov > 0;
 });
 
 const withdrawals = movements.filter(mov => mov < 0);
-console.log(movements);
-console.log(deposits);
-console.log(withdrawals);
 
 //Maximum Value
 const max = movements.reduce((acc, mov) => {
@@ -108,4 +124,9 @@ const max = movements.reduce((acc, mov) => {
     return mov;
   }
 }, movements[0]);
-console.log(max);
+
+const totalDepositsUSD = movements
+  .filter(mov => mov > 0)
+  .map(mov => mov * euroToUsd)
+  .reduce((acc, mov) => acc + mov, 0);
+console.log(totalDepositsUSD);
